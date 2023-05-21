@@ -4,10 +4,36 @@ const { MongoChangeStreamError } = require("mongodb");
 const carController = {};
 
 carController.createCar = async (req, res, next) => {
-	try {
-		const { make, model, release_date, transmission_type, size, style, price } =
-			req.body;
-		if (!make || !model || !release_date)
+  try {
+    const { make, model, release_date, transmission_type, size, style, price } =
+      req.body;
+    if (
+      !make ||
+      !model ||
+      !release_date ||
+      !transmission_type ||
+      !size ||
+      !style ||
+      !price
+    ) {
+      throw new Error("Missing required info!");
+    }
+
+    const result = {
+      message: "Create Car Successfully!",
+      car: {
+        make,
+        model,
+        release_date,
+        transmission_type,
+        size,
+        style,
+        price,
+      },
+    };
+    const newCar = new Car(result.car);
+    res.status(200).send(result);
+
     // 	  {
     //     "make": "Plymouth",
     //     "model": "Colt",
@@ -20,6 +46,8 @@ carController.createCar = async (req, res, next) => {
     // YOUR CODE HERE
   } catch (err) {
     // YOUR CODE HERE
+    console.error(err);
+    res.status(400).send({ data: { message: err.message } });
   }
 };
 
@@ -43,7 +71,7 @@ carController.getCars = async (req, res, next) => {
     res.status(200).send(result);
   } catch (err) {
     console.error(err);
-    res.status(500).send({ data: { message: "Error retrieving car list" } });
+    res.status(400).send({ data: { message: "Error retrieving car list" } });
   }
 };
 
