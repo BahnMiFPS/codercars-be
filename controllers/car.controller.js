@@ -12,14 +12,27 @@ carController.createCar = async (req, res, next) => {
 };
 
 carController.getCars = async (req, res, next) => {
-  const carModel = new Car();
+  const { page } = req.query;
+  const limit = 10;
   try {
-    const carList = await carModel.find(carController);
+    const carList = await Car.find().limit(limit).skip(page);
+    const totalCars = await Car.countDocuments();
+    const totalPage = Math.floor(totalCars / limit);
+    console.log(totalCars, totalPage);
 
-    console.log(carList);
-    // YOUR CODE HERE
+    const result = {
+      data: {
+        message: "Get Car List Successfully!",
+        cars: carList,
+        page: Number(page),
+        // total pages
+        total: totalPage,
+      },
+    };
+    res.status(200).send(result);
   } catch (err) {
-    // YOUR CODE HERE
+    console.error(err);
+    res.status(500).send({ data: { message: "Error retrieving car list" } });
   }
 };
 

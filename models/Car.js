@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 const carSchema = new mongoose.Schema(
   {
-    Make: {
+    make: {
       type: String,
       required: true,
     },
-    Model: {
+    model: {
       type: String,
       required: true,
     },
-    Year: {
+    year: {
       type: Number,
       min: 1900,
       required: true,
