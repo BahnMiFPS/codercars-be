@@ -18,7 +18,6 @@ carController.getCars = async (req, res, next) => {
     const carList = await Car.find().limit(limit).skip(page);
     const totalCars = await Car.countDocuments();
     const totalPage = Math.floor(totalCars / limit);
-    console.log(totalCars, totalPage);
 
     const result = {
       data: {
