@@ -4,7 +4,19 @@ const { MongoChangeStreamError } = require("mongodb");
 const carController = {};
 
 carController.createCar = async (req, res, next) => {
-  try {
+	try {
+		const { make, model, release_date, transmission_type, size, style, price } =
+			req.body;
+		if (!make || !model || !release_date)
+    // 	  {
+    //     "make": "Plymouth",
+    //     "model": "Colt",
+    //     "release_date": 2002,
+    //     "transmission_type": "MANUAL",
+    //     "size": "Compact",
+    //     "style": "Coupe",
+    //     "price": 23000
+    // }
     // YOUR CODE HERE
   } catch (err) {
     // YOUR CODE HERE
