@@ -24,6 +24,7 @@ const syncDatabase = () => {
       city_mpg: car["city mpg"],
       popularity: car.Popularity,
       price: car.MSRP,
+      isDeleted: false,
     };
   });
 

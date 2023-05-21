@@ -31,23 +31,11 @@ carController.createCar = async (req, res, next) => {
         price,
       },
     };
-    const newCar = new Car(result.car);
+    await Car.create(result.car);
     res.status(200).send(result);
-
-    // 	  {
-    //     "make": "Plymouth",
-    //     "model": "Colt",
-    //     "release_date": 2002,
-    //     "transmission_type": "MANUAL",
-    //     "size": "Compact",
-    //     "style": "Coupe",
-    //     "price": 23000
-    // }
-    // YOUR CODE HERE
   } catch (err) {
-    // YOUR CODE HERE
     console.error(err);
-    res.status(400).send({ data: { message: err.message } });
+    res.status(400).send({ message: err.message });
   }
 };
 
@@ -55,7 +43,9 @@ carController.getCars = async (req, res, next) => {
   const { page } = req.query;
   const limit = 10;
   try {
-    const carList = await Car.find().limit(limit).skip(page);
+    const carList = await Car.find({ isDeleted: false })
+      .limit(limit)
+      .skip(page);
     const totalCars = await Car.countDocuments();
     const totalPage = Math.floor(totalCars / limit);
 
@@ -77,17 +67,46 @@ carController.getCars = async (req, res, next) => {
 
 carController.editCar = async (req, res, next) => {
   try {
-    // YOUR CODE HERE
+    const updatedInfo = req.body;
+    const Id = req.params.id;
+    const newCar = await Car.findByIdAndUpdate(Id, updatedInfo, {
+      returnDocument: "after",
+    });
+    res
+      .status(200)
+      .send({ data: { message: "Updated Car successfully", newCar } });
   } catch (err) {
-    // YOUR CODE HERE
+    console.error(err);
+    res.status(400).send({ data: { message: err.message } });
   }
 };
 
 carController.deleteCar = async (req, res, next) => {
+  // Hard delete
+  //   try {
+  //     const Id = req.params.id;
+  //     const deleted_car = await Car.findByIdAndDelete(Id);
+  //     res
+  //       .status(200)
+  //       .send({ data: { message: "Deleted Car successfully", deleted_car } });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(400).send({ data: { message: err.message } });
+  //   }
+
+  //Soft Delete
   try {
-    // YOUR CODE HERE
+    const updatedInfo = { isDeleted: true };
+    const Id = req.params.id;
+    const deleted_car = await Car.findByIdAndUpdate(Id, updatedInfo, {
+      returnDocument: "after",
+    });
+    res
+      .status(200)
+      .send({ data: { message: "Deleted Car successfully", deleted_car } });
   } catch (err) {
-    // YOUR CODE HERE
+    console.error(err);
+    res.status(400).send({ data: { message: err.message } });
   }
 };
 
