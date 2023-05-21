@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Car = require("../models/Car");
+const { MongoChangeStreamError } = require("mongodb");
 const carController = {};
 
 carController.createCar = async (req, res, next) => {
@@ -11,16 +12,11 @@ carController.createCar = async (req, res, next) => {
 };
 
 carController.getCars = async (req, res, next) => {
-  // 	{
-  //     "message": "Get Car List Successfully!",
-  //     "cars": [
-  //         //car objects
-  //     ],
-  //     "page": 1,
-  //     // total pages
-  //     "total": 1192
-  // }
+  const carModel = new Car();
   try {
+    const carList = await carModel.find(carController);
+
+    console.log(carList);
     // YOUR CODE HERE
   } catch (err) {
     // YOUR CODE HERE
